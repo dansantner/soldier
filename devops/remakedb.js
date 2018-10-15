@@ -28,6 +28,8 @@ const run = async () => {
             "rank": "Captain",
             "branch": "Air Force",
             "conflict": "World War II",
+            "dob": "11/15/1963",
+            "dod": "12/13/1985",
             "geo": {
                 "latitude": 42.03948,
                 "longitude": -88.8567131
@@ -43,6 +45,8 @@ const run = async () => {
             "rank": "Captain",
             "branch": "Marines",
             "conflict": "Iraq",
+            "dob": "11/15/1963",
+            "dod": "12/13/1985",
             "geo": {
                 "latitude": 42.03948,
                 "longitude": -88.8567131

@@ -58,6 +58,11 @@ const BackButton = styled(Button)`
   }
 `
 
+const Sub = styled.div`
+  display:block;
+  color: slategray;
+`
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -331,7 +336,7 @@ class App extends Component {
             </FormGroup>
             <FormGroup>
               <Col componentClass={ControlLabel} xs={2}>
-                First Name
+                Last Name
               </Col>
               <Col xs={10}>
                 <FormControl
@@ -339,6 +344,36 @@ class App extends Component {
                   value={soldier.lastName}
                   onChange={ e => {
                     const newSoldier = {...this.state.soldier, lastName:e.target.value}
+                    this.setState({soldier: newSoldier})
+                  }}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup>
+              <Col componentClass={ControlLabel} xs={2}>
+                DOB
+              </Col>
+              <Col xs={10}>
+                <FormControl
+                  type="text"
+                  value={soldier.dob}
+                  onChange={ e => {
+                    const newSoldier = {...this.state.soldier, dob:e.target.value}
+                    this.setState({soldier: newSoldier})
+                  }}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup>
+              <Col componentClass={ControlLabel} xs={2}>
+                DOD
+              </Col>
+              <Col xs={10}>
+                <FormControl
+                  type="text"
+                  value={soldier.dod}
+                  onChange={ e => {
+                    const newSoldier = {...this.state.soldier, dod:e.target.value}
                     this.setState({soldier: newSoldier})
                   }}
                 />
@@ -456,7 +491,6 @@ class App extends Component {
             <h1>Find My Soldier</h1>
             <Form horizontal>
             <BackButton onClick={() => this.setState({view: 'intro'})}>{`< Back to Search`}</BackButton>
-
               <FormGroup>
                 <Col componentClass={ControlLabel} xs={4}>
                 </Col>
@@ -469,6 +503,7 @@ class App extends Component {
                 </Col>
                 <Col xs={10}>
                   {soldier.label}
+                  <Sub>{`${soldier.dob} - ${soldier.dod}`}</Sub>
                 </Col>
               </FormGroup>
               <FormGroup>
@@ -496,7 +531,20 @@ class App extends Component {
                 </Col>
               </FormGroup>
             </Form>
-            <h4>Location</h4>
+            <FormGroup>
+                <Col componentClass={ControlLabel} xs={2}>
+                  Lat
+                </Col>
+                <Col xs={4} style={{backgroundColor: 'white'}}>
+                  {soldier.geo.latitude}
+                </Col>
+                <Col componentClass={ControlLabel} xs={2}>
+                  Long
+                </Col>
+                <Col xs={4} style={{backgroundColor: 'white'}}>
+                  {soldier.geo.longitude}
+                </Col>
+            </FormGroup>
             <Marker
               apikey={GOOGLE_MAPS_API_KEY}
               zoom={7}

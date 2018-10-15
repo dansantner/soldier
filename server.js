@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser')
 const path = require('path')
 
 const app = express()
-const port = 5000
+const port = 5000 //change to 80 in production
 const nano = require('nano')('http://localhost:5984')
 const db = nano.use('soldier')
 
@@ -20,9 +20,6 @@ app.use(session({
     secret: 'peanut butter and jelly',
     cookie: { maxAge: 500000000} //a little less than a week.
 }))
-
-
-//app.get('/', (req, res) => res.send('Hello Soldiers!'))
 
 app.get('/soldiers', async (req, res) => {
     const soldiers = (await db.view('soldier', 'all')).rows.map(r => r.value)
@@ -71,9 +68,10 @@ app.delete('/soldiers', jsonParser, async (req, res) => {
     }
 })
 
+/* uncomment in production
 app.get('/admin', (req, res) => {
     res.redirect('/?admin=true');
 })
 app.use(express.static(path.join(__dirname, 'build')));
-
+*/
 app.listen(port, () => console.log(`Solder app listening on port ${port}!`))
