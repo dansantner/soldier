@@ -6,7 +6,11 @@ const cookieParser = require('cookie-parser')
 const path = require('path')
 
 const app = express()
-const port = 5000 //change to 80 in production
+//*********************************************
+//change to 80 in production
+//*********************************************
+const port = 5000 
+//*********************************************
 const nano = require('nano')('http://localhost:5984')
 const db = nano.use('soldier')
 
@@ -20,6 +24,10 @@ app.use(session({
     secret: 'peanut butter and jelly',
     cookie: { maxAge: 500000000} //a little less than a week.
 }))
+
+const Ddos = require('ddos')
+const ddos = new Ddos({burst:20,limit:100})
+app.use(ddos.express)
 
 app.get('/soldiers', async (req, res) => {
     const soldiers = (await db.view('soldier', 'all')).rows.map(r => r.value)
@@ -68,7 +76,10 @@ app.delete('/soldiers', jsonParser, async (req, res) => {
     }
 })
 
-/* uncomment in production
+//*********************************************
+// uncomment in production
+//*********************************************
+/*
 app.get('/admin', (req, res) => {
     res.redirect('/?admin=true');
 })
