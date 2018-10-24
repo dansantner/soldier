@@ -39,6 +39,11 @@ app.get('/login', jsonParser, async (req, res) => {
 })
 
 app.post('/login', jsonParser, async (req, res) => {
+    const p = req.body.p
+    if (!p || typeof p != 'string') {
+        res.send(401)
+        return
+    }
     const admin = await db.get('admin')
     const isValid = bcrypt.compareSync(req.body.p, admin.hash)
     if (isValid) {
@@ -54,7 +59,7 @@ app.post('/login', jsonParser, async (req, res) => {
 
 app.post('/soldiers', jsonParser, async (req, res) => {
     if (!req.session.secure) {
-        res.sendStatus(401)
+        res.sendStatus(403)
     } else {
         let doc = req.body
         doc.type = 'soldier'
@@ -66,7 +71,7 @@ app.post('/soldiers', jsonParser, async (req, res) => {
 
 app.delete('/soldiers', jsonParser, async (req, res) => {
     if (!req.session.secure) {
-        res.sendStatus(401)
+        res.sendStatus(403)
     } else {
         let doc = req.body
         doc.type = 'soldier'
