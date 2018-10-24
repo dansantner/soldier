@@ -44,6 +44,10 @@ app.post('/login', jsonParser, async (req, res) => {
         res.send(401)
         return
     }
+    if (p === '' || p.toLowerCase() === 'password' || p.toLowerCase() === 'admin') {
+        res.send(401)
+        return
+    }
     const admin = await db.get('admin')
     const isValid = bcrypt.compareSync(req.body.p, admin.hash)
     if (isValid) {
