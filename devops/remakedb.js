@@ -57,7 +57,7 @@ const run = async () => {
     ).catch(e => console.log('sample data insert failed'))
 
     //admin user
-    var hash = bcrypt.hashSync('p3anutbutt3r', 8);
+    var hash = bcrypt.hashSync('jellyman3', 8);
     await db.insert(
         {
             "_id": "admin",
