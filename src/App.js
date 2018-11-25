@@ -215,6 +215,7 @@ class App extends Component {
         },
         rank: '',
         type: '',
+        bio: ''
       }
     })
   }
@@ -308,9 +309,9 @@ class App extends Component {
         }
       }
     }
-    //ADMIN
     if (this.state.view === 'detail') { 
       const soldier = this.state.soldier
+      //ADMIN
       if (this.state.isAdmin && this.state.secure) {
         return (
         <Container>
@@ -464,6 +465,22 @@ class App extends Component {
               </Col>
             </FormGroup>
             <FormGroup>
+              <Col componentClass={ControlLabel} xs={2}>
+                Bio
+              </Col>
+              <Col xs={10}>
+                <FormControl
+                  componentClass="textarea"
+                  rows={3}
+                  value={soldier.bio}
+                  onChange={ e => {
+                    const newSoldier = {...this.state.soldier, bio:e.target.value}
+                    this.setState({soldier: newSoldier})
+                  }}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup>
               <Col componentClass={ControlLabel} xs={2}>                
               </Col>
               <Col xs={10}>
@@ -530,8 +547,8 @@ class App extends Component {
                   {soldier.conflict}
                 </Col>
               </FormGroup>
-            </Form>
-            <FormGroup>
+              <h3>Location</h3>
+              <FormGroup>
                 <Col componentClass={ControlLabel} xs={2}>
                   Lat
                 </Col>
@@ -544,18 +561,44 @@ class App extends Component {
                 <Col xs={4} style={{backgroundColor: 'white'}}>
                   {soldier.geo.longitude}
                 </Col>
-            </FormGroup>
-            <Marker
-              apikey={GOOGLE_MAPS_API_KEY}
-              zoom={7}
-              center={{ lat: soldier.geo.latitude, lng: soldier.geo.longitude }}
-              locations={[{ lat: soldier.geo.latitude, lng: soldier.geo.longitude, title: soldier.label }]}
-              height={300}
-              width={window.innerWidth - 20}
-            />
+              </FormGroup>
+              <FormGroup>
+                <Col componentClass={ControlLabel} xs={2}>
+                </Col>
+                <Col xs={10}>
+                <a onClick={()=>this.setState({view:'map'})} href='#'>Show Map</a>
+                </Col>
+              </FormGroup>
+              <FormGroup>
+                <Col componentClass={ControlLabel} xs={2}>
+                  Bio
+                </Col>
+                <Col xs={10}>
+                  {soldier.bio}
+                </Col>
+              </FormGroup>
+            </Form>
           </Container>
         )
       }
+    }
+    //MAP
+    if (this.state.view === 'map') {
+      const soldier = this.state.soldier
+      return (
+        <Container>
+          <h1>Find My Soldier</h1>
+          <BackButton onClick={() => this.setState({view: 'detail'})}>{`< Back to Details`}</BackButton>
+          <Marker
+            apikey={GOOGLE_MAPS_API_KEY}
+            zoom={7}
+            center={{ lat: soldier.geo.latitude, lng: soldier.geo.longitude }}
+            locations={[{ lat: soldier.geo.latitude, lng: soldier.geo.longitude, title: soldier.label }]}
+            height={window.innerHeight - 120}
+            width={window.innerWidth - 20}
+          />
+        </Container>
+      )
     }
   }
 }

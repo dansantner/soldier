@@ -33,7 +33,8 @@ const run = async () => {
             "geo": {
                 "latitude": 42.03948,
                 "longitude": -88.8567131
-            }
+            },
+            "bio": "John was in the invasion of Normandy. He served four years in the Air Force.  At the end of World War II, he returned home and became an architect."
          }
     ).catch(e => console.log('sample data insert failed'))
 
@@ -50,7 +51,8 @@ const run = async () => {
             "geo": {
                 "latitude": 42.03948,
                 "longitude": -88.8567131
-            }
+            },
+            "bio": "John served 8 years from the start of the first war in Iraq. He was killed in action and received a medal of Honor for his service."
         }
     ).catch(e => console.log('sample data insert failed'))
 
