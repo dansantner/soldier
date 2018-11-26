@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import {Typeahead} from 'react-bootstrap-typeahead';
 import { Marker } from "react-geo-maps";
 import SweetAlert from 'sweetalert2-react';
+import axios, { post } from 'axios';
 
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBfhgerK2UXR5QHjZfRBilsuTnf5R-3bhU'
@@ -80,7 +81,7 @@ class App extends Component {
     })
     .then((response) => {
       // handle response with expected status:
-      this.setState({list: response.body.map(o => Object.assign(o, {label: `${o.firstName} ${o.lastName}`}))}) // json response here
+      this.setState({list: response.body.map(o => Object.assign(o, {label: `${o.firstName} ${o.lastName}`, hasStone: !!(o._attachments && o._attachments.stone)}))}) // json response here
       //console.log(response.status)
       //console.log(response.statusText)
       //console.log(response.headers)
@@ -232,8 +233,33 @@ class App extends Component {
           this.setState({soldier: newSoldier, isLocating: false})
         }
       )
-    )
-    
+    ) 
+  }
+
+  onFileFormSubmit = (e) => {
+    e.preventDefault() // Stop form submit
+    this.fileUpload(this.state.file).then((response)=>{
+      if (response.data.ok) {
+        let newSoldier = JSON.parse(JSON.stringify(this.state.soldier))
+        newSoldier._rev = response.data.rev
+        newSoldier._id = response.data.id
+        this.setState({isPosting: false, list: false, soldier: newSoldier, confirm: true})
+      }
+    })
+  }
+  onFileChange = (e) => {
+    this.setState({file:e.target.files[0]})
+  }
+  fileUpload = (file) => {
+    const url = `/stone/${this.state.soldier._id}`
+    const formData = new FormData();
+    formData.append('aFile',file)
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    }
+    return  post(url, formData, config)
   }
 
   render() {
@@ -500,6 +526,14 @@ class App extends Component {
               </Col>
             </FormGroup> : null}
           </Form>
+          <form onSubmit={this.onFileFormSubmit}>
+            <h1>Headstone</h1>
+            {this.state.soldier.hasStone ?
+            <img src={`/stone/${this.state.soldier._id}`} width={window.innerWidth - 20}/> :
+            null}            
+            <input type="file" name='aFile' onChange={this.onFileChange} />
+            <button type="submit">Upload</button>
+          </form>
         </Container>)
       //NON ADMIN
       } else { 
@@ -509,9 +543,10 @@ class App extends Component {
             <Form horizontal>
             <BackButton onClick={() => this.setState({view: 'intro'})}>{`< Back to Search`}</BackButton>
               <FormGroup>
-                <Col componentClass={ControlLabel} xs={4}>
-                </Col>
-                <Col xs={8}>
+                <Col xs={12}>
+                  {soldier.hasStone ?
+                  <img src={`/stone/${soldier._id}`} width={window.innerWidth - 20}/> :
+                  null}
                 </Col>
               </FormGroup>
               <FormGroup>
